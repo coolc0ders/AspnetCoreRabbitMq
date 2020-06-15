@@ -16,9 +16,13 @@ namespace CompaniesService.Consumers
         RabbitmqConfig _rabbitConfig;
         ISendEndpointProvider _sendEndpoint;
         IPublishEndpoint _publishEndPoint;
+        FakeStore _store;
 
-        public SubscribeToCompanyConsumer(IOptions<RabbitmqConfig> rabbitConfig, ISendEndpointProvider sendEndpoint, IPublishEndpoint publish)
+        public SubscribeToCompanyConsumer(IOptions<RabbitmqConfig> rabbitConfig, 
+            ISendEndpointProvider sendEndpoint, IPublishEndpoint publish,
+            FakeStore store)
         {
+            _store = store;
             _rabbitConfig = rabbitConfig.Value;
             _sendEndpoint = sendEndpoint;
             _publishEndPoint = publish;
@@ -28,7 +32,10 @@ namespace CompaniesService.Consumers
         {
             try
             {
-                CompaniesController.Companies.SingleOrDefault(c => c.Id == context.Message.CompanyId).FollowersIds.Add(context.Message.UserId);
+                var company = _store.Companies.SingleOrDefault(c => c.Id == context.Message.CompanyId);
+                var f = company.FollowersIds;
+                company.FollowersIds.Add(context.Message.UserId);
+
                 return _publishEndPoint.Publish(new SubscriptionSuccessfulEvent
                 {
                     CompanyId = context.Message.CompanyId,

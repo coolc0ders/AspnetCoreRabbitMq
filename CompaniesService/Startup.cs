@@ -29,8 +29,8 @@ namespace CompaniesService
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddSingleton<FakeStore>();
             services.Configure<RabbitmqConfig>(Configuration.GetSection("Rabbitmq"));
-
             services.AddMassTransit(x =>
             {
                 var configSections = Configuration.GetSection("Rabbitmq");
@@ -76,7 +76,6 @@ namespace CompaniesService
                 options.Delay = TimeSpan.FromSeconds(2);
                 options.Predicate = (check) => check.Tags.Contains("ready");
             });
-
             services.AddMassTransitHostedService();
 
             services.AddControllers();

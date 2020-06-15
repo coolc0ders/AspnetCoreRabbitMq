@@ -11,41 +11,23 @@ namespace CompaniesService.Controllers
     [ApiController]
     public class CompaniesController : ControllerBase
     {
-        public static List<Company> Companies { get; set; }
+        FakeStore _store;
 
-        public CompaniesController()
+        public CompaniesController(FakeStore store)
         {
-            Companies = new List<Company>
-            {
-                new Company
-                {
-                    Id = "asdkjf",
-                    Address = "La defense",
-                    Country = "France",
-                    Domain = "Tech",
-                    Name = "Global Tech"
-                },
-                new Company
-                {
-                    Id = "iorep",
-                    Address = "Issy les moulineux",
-                    Country = "France",
-                    Domain = "Tech",
-                    Name = "Tech for Tech"
-                },
-            };
+            _store = store;
         }
 
         [HttpGet]
         public IActionResult GetCompanies()
         {
-            return Ok(Companies);
+            return Ok(_store.Companies);
         }
 
         [HttpGet("{companyId}")]
         public IActionResult GetCompany(string companyId)
         {
-            var company = Companies.SingleOrDefault(c => c.Id == companyId);
+            var company = _store.Companies.SingleOrDefault(c => c.Id == companyId);
             return Ok(company);
         }
     }
