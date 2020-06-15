@@ -12,7 +12,11 @@ namespace UsersService.Models
         public string Email { get; set; }
         public string Address { get; set; }
         public short Age { get; set; }
-
         public List<string> FollowingCompanyIds { get; set; }
+        public string Id { get; set; }
+
+        public User()
+        {
+        }
     }
 }

@@ -12,5 +12,11 @@ namespace CompaniesService.Models
         public string Address { get; set; }
         public string Country { get; set; }
         public List<string> FollowersIds { get; set; }
+        public string Id { get; set; }
+
+        public Company()
+        {
+            FollowersIds = new List<string>();
+        }
     }
 }
